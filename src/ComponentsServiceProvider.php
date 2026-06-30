@@ -28,7 +28,6 @@ final class ComponentsServiceProvider extends AbstractServiceProvider implements
      * @param list<class-string<ComponentInterface>> $componentClasses
      */
     public function __construct(
-        private readonly string $root,
         private readonly array $componentClasses,
     ) {}
 
@@ -99,7 +98,7 @@ final class ComponentsServiceProvider extends AbstractServiceProvider implements
     {
         /** @var MigrationRegistry $migrationRegistry */
         $migrationRegistry = $this->getContainer()->get(MigrationRegistry::class);
-        $migrationRegistry->append($this->toAbsolutePaths($registry->migrationPaths()));
+        $migrationRegistry->append($registry->migrationPaths());
     }
 
     private function registerConsoleCommands(ComponentRegistry $registry): void
@@ -109,7 +108,7 @@ final class ComponentsServiceProvider extends AbstractServiceProvider implements
         $consoleApplication = $container->get(ConsoleApplication::class);
 
         $consoleApplication->addCommand(new ComponentListCommand($registry));
-        $consoleApplication->addCommand(new ComponentPublishAssetsCommand($this->root, $registry));
+        $consoleApplication->addCommand(new ComponentPublishAssetsCommand($registry));
 
         foreach ($registry->commands() as $commandClass) {
             /** @var callable $command */
@@ -140,21 +139,5 @@ final class ComponentsServiceProvider extends AbstractServiceProvider implements
         $viewRegistry->extensions()->append($registry->viewExtensions());
         $viewRegistry->paths()->append($registry->viewPaths());
         $viewRegistry->contexts()->append($registry->viewContexts());
-    }
-
-    /**
-     * @param list<string> $paths
-     * @return list<string>
-     */
-    private function toAbsolutePaths(array $paths): array
-    {
-        $root = rtrim($this->root, '/');
-
-        return array_map(
-            fn(string $path): string => str_starts_with($path, '/')
-                ? $path
-                : $root . '/' . ltrim($path, '/'),
-            $paths,
-        );
     }
 }

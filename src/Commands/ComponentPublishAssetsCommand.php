@@ -23,10 +23,8 @@ final class ComponentPublishAssetsCommand extends Command
     private const string MSG_COMPLETED_WITH_ERRORS = 'Completed with %d errors.';
     private const string MSG_SUCCESS = 'All component assets published successfully.';
 
-    public function __construct(
-        private readonly string $root,
-        private readonly ComponentRegistry $registry,
-    ) {
+    public function __construct(private readonly ComponentRegistry $registry)
+    {
         parent::__construct();
     }
 
@@ -50,10 +48,7 @@ final class ComponentPublishAssetsCommand extends Command
         }
 
         $errors = 0;
-        foreach ($assets as $source => $target) {
-            $sourcePath = $this->rootPath($source);
-            $targetPath = $this->rootPath($target);
-
+        foreach ($assets as $sourcePath => $targetPath) {
             if (!$filesystem->exists($sourcePath)) {
                 $io->error(sprintf(self::MSG_SOURCE_NOT_FOUND, $sourcePath));
                 $errors++;
@@ -64,10 +59,10 @@ final class ComponentPublishAssetsCommand extends Command
             try {
                 if (is_dir($sourcePath)) {
                     $filesystem->mirror($sourcePath, $targetPath, null, [self::OPTION_OVERRIDE => true]);
-                    $io->writeln(sprintf(self::MSG_MIRRORED, $source, $target));
+                    $io->writeln(sprintf(self::MSG_MIRRORED, $sourcePath, $targetPath));
                 } else {
                     $filesystem->copy($sourcePath, $targetPath, true);
-                    $io->writeln(sprintf(self::MSG_COPIED, $source, $target));
+                    $io->writeln(sprintf(self::MSG_COPIED, $sourcePath, $targetPath));
                 }
             } catch (IOExceptionInterface $exception) {
                 $io->error(sprintf(self::MSG_ERROR_OCCURRED, $exception->getMessage()));
@@ -84,10 +79,5 @@ final class ComponentPublishAssetsCommand extends Command
         $io->success(self::MSG_SUCCESS);
 
         return Command::SUCCESS;
-    }
-
-    private function rootPath(string $path): string
-    {
-        return rtrim($this->root, '/') . '/' . ltrim($path, '/');
     }
 }

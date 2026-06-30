@@ -27,7 +27,7 @@ interface ComponentInterface
     public function viewExtensions(): array;
 
     /**
-     * @return array<string, string>
+     * @return array<string, string> namespace => absolute filesystem path
      */
     public function viewPaths(): array;
 
@@ -47,12 +47,12 @@ interface ComponentInterface
     public function seeders(): array;
 
     /**
-     * @return list<string>
+     * @return list<string> absolute filesystem paths
      */
     public function migrationPaths(): array;
 
     /**
-     * @return array<string, string>
+     * @return array<string, string> source path => target path (absolute filesystem paths)
      */
     public function assets(): array;
 }

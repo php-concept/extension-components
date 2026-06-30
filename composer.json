@@ -1,7 +1,6 @@
 {
     "name": "php-concept/extension-components",
     "description": "Concept Components extension — plugin manifest registry and boot wiring",
-    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
     "autoload": {
