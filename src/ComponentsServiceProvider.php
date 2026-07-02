@@ -138,6 +138,6 @@ final class ComponentsServiceProvider extends AbstractServiceProvider implements
         $viewRegistry = $this->getContainer()->get(ViewRegistry::class);
         $viewRegistry->extensions()->append($registry->viewExtensions());
         $viewRegistry->paths()->append($registry->viewPaths());
-        $viewRegistry->contexts()->append($registry->viewContexts());
+        $viewRegistry->routeNamespace()->append($registry->viewRouteNamespace());
     }
 }

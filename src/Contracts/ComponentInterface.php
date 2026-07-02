@@ -32,9 +32,9 @@ interface ComponentInterface
     public function viewPaths(): array;
 
     /**
-     * @return array<string, string>
+     * @return array<string, string> route prefix => view namespace
      */
-    public function viewContexts(): array;
+    public function viewRouteNamespace(): array;
 
     /**
      * @return list<class-string<Command>>
